@@ -84,8 +84,6 @@ publishing {
         create("mavenJava", MavenPublication) {
             artifactId = project.archives_base_name
             from components.java
-
-            artifact shadowJar
         }
     }
 
@@ -104,4 +102,8 @@ remapJar {
     mustRunAfter(shadowJar)
     // Set the input jar for the task. Here use the shadow Jar that include the .class of the transitive dependency
     inputFile = file(shadowJar.archivePath)
+}
+
+artifacts {
+    archives shadowJar
 }
