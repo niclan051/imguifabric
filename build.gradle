@@ -1,7 +1,5 @@
 plugins {
     id 'fabric-loom' version '1.7-SNAPSHOT'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
-
     id 'maven-publish'
 }
 
@@ -27,19 +25,14 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    include modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     api "io.github.spair:imgui-java-binding:${project.imgui_version}"
-    shadow "io.github.spair:imgui-java-binding:${project.imgui_version}"
     api "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}"
-    shadow "io.github.spair:imgui-java-lwjgl3:${project.imgui_version}"
 
     implementation "io.github.spair:imgui-java-natives-windows:${project.imgui_version}"
-    shadow "io.github.spair:imgui-java-natives-windows:${project.imgui_version}"
     implementation "io.github.spair:imgui-java-natives-linux:${project.imgui_version}"
-    shadow "io.github.spair:imgui-java-natives-linux:${project.imgui_version}"
     implementation "io.github.spair:imgui-java-natives-macos:${project.imgui_version}"
-    shadow "io.github.spair:imgui-java-natives-macos:${project.imgui_version}"
 
 }
 
@@ -77,18 +70,6 @@ java {
     // if it is present.
     // If you remove this line, sources will not be generated.
     withSourcesJar()
-}
-
-remapJar {
-    // wait until the shadowJar is done
-    dependsOn(shadowJar)
-    mustRunAfter(shadowJar)
-    // Set the input jar for the task. Here use the shadow Jar that include the .class of the transitive dependency
-    inputFile = file(shadowJar.archivePath)
-}
-
-artifacts {
-    archives shadowJar
 }
 
 publishing {
