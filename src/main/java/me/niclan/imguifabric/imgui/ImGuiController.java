@@ -5,13 +5,19 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import me.niclan.imguifabric.Renderable;
 import me.niclan.imguifabric.events.ImGuiConfigureFontsCallback;
 import me.niclan.imguifabric.events.ImGuiRenderCallback;
 import me.niclan.imguifabric.events.ImGuiSetupCallback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class ImGuiController {
+    private static final List<Renderable> renderQueue = new ArrayList<>();
+
     public static final ImGuiImplGlfw IMGUI_GLFW = new ImGuiImplGlfw();
     public static final ImGuiImplGl3 IMGUI_GL3 = new ImGuiImplGl3();
 
@@ -41,6 +47,10 @@ public class ImGuiController {
         ImGui.newFrame();
 
         ImGuiRenderCallback.EVENT.invoker().render();
+        for (Renderable renderable : renderQueue) {
+            renderable.render();
+        }
+        renderQueue.clear();
 
         ImGui.render();
         IMGUI_GL3.renderDrawData(ImGui.getDrawData());
@@ -51,5 +61,9 @@ public class ImGuiController {
             ImGui.renderPlatformWindowsDefault();
             glfwMakeContextCurrent(backupWindowPtr);
         }
+    }
+
+    public static void addToRenderQueue(Renderable renderable) {
+        renderQueue.add(renderable);
     }
 }
